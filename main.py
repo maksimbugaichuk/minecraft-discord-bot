@@ -20,7 +20,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 DB_FILE = "bot_data.db"
 
 def init_db():
-    """Initializes the database table if it doesn't exist."""
+    """Initializes the database table if it doesn't exist"""
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('''
@@ -81,7 +81,7 @@ async def on_message(message):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def setup(ctx, host: str, port: int = 25565):
-    """Sets up the tracking system for this specific Discord server's Minecraft server."""
+    """Sets up the tracking system for this specific discord server's minecraft server"""
     guild = ctx.guild
     await ctx.send("⏳ Setting up channels and roles, please wait...")
 
@@ -112,20 +112,19 @@ async def setup(ctx, host: str, port: int = 25565):
         # Save everything to SQLite database
         save_guild_settings(guild.id, new_role.id, channel.id, message.id, host, port)
 
-        await ctx.send(f"✅ Setup complete! Created tracking channel {channel.mention} for Minecraft server `{host}:{port}`.")
+        await ctx.send(f"Setup complete! Created channel {channel.mention} for Minecraft server `{host}:{port}`.")
 
     except Exception as e:
-        await ctx.send(f"❌ Setup failed: {e}")
+        await ctx.send(f"Setup failed: {e}")
 
 @tasks.loop(seconds=60)
 async def update_minecraft_status():
-    """Loops through all registered guilds in the DB, pings their specific MC server, and updates messages."""
+    """Loops through all registered guilds in the database, pings their specific minecraft server and updates messages"""
     all_guilds = get_all_guilds()
     if not all_guilds:
         return
 
     for guild_id, role_id, channel_id, message_id, mc_host, mc_port in all_guilds:
-        # Internal try-except ensures ONE failing MC server doesn't crash the loop for other Discord servers
         try:
             server = JavaServer(mc_host, mc_port)
             status = server.status()
@@ -158,7 +157,7 @@ async def before_update():
 
 @bot.command()
 async def info(ctx: commands.Context):
-    """Assigns the created role to the user who ran the command."""
+    """Assigns the created role to the user who ran the command"""
     guild = ctx.guild
     member = ctx.author
 
